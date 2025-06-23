@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unlock the Riemann Gate</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+      height: 100vh;
+      background: radial-gradient(ellipse at center, #1a1a1a 0%, #111111 100%);
+      position: relative;
+    }
+    #grid-layer {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.02) 5px, transparent 5px),
+        linear-gradient(to bottom, rgba(255,255,255,0.02) 5px, transparent 5px);
+      background-size: 40px 40px;
+      animation: scrollGrid 60s linear infinite;
+      z-index: 0;
+    }
+    @keyframes scrollGrid {
+      from { background-position: 0 0; }
+      to { background-position: 4000px 4000px; }
+    }
+    .math-symbol {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.05);
+      font-size: 80px;
+      animation: float 30s linear infinite;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+    @keyframes float {
+      from { transform: translateY(100vh) rotate(0deg); }
+      to { transform: translateY(-150vh) rotate(360deg); }
+    }
+    .center {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 2;
+    }
+    .center h1 {
+      color: #00ffc8;
+      font-size: 3rem;
+      margin-bottom: 0.5em;
+      text-shadow: 0 0 10px #00ffd5;
+    }
+    #unlockBtn {
+      background: linear-gradient(90deg, #00ffc8, #00d4ff);
+      border: none;
+      padding: 20px 40px;
+      font-size: 24px;
+      color: black;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 0 20px #00ffd5;
+      transition: all 0.3s ease;
+    }
+    #unlockBtn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px #00ffd5;
+    }
+    #quizBox {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.9);
+      padding: 20px;
+      border: 2px solid #00ffd5;
+      border-radius: 10px;
+      max-width: 500px;
+      color: #00ffc8;
+      display: none;
+      z-index: 3;
+    }
+    #quizBox h2 {
+      font-size: 1.2rem;
+    }
+    .option {
+      margin-top: 10px;
+      background: #111;
+      border: 1px solid #00ffd5;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .option:hover {
+      background: #00d4ff;
+      color: black;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="grid-layer"></div>
+
+  <div class="math-symbol" style="left: 10%; top: 80%;">π</div>
+  <div class="math-symbol" style="left: 25%; top: 90%;">∫</div>
+  <div class="math-symbol" style="left: 60%; top: 95%;">∞</div>
+  <div class="math-symbol" style="left: 80%; top: 85%;">√</div>
+  <div class="math-symbol" style="left: 40%; top: 88%;">Σ</div>
+
+  <div class="center">
+    <h1>Unlock the Riemann Gate</h1>
+    <button id="unlockBtn">🔓 Unlock</button>
+  </div>
+
+  <div id="quizBox">
+    <h2 id="question"></h2>
+    <div id="options"></div>
+  </div>
+
+  <canvas id="world"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>
+  <script>
+    const questions = [
+      { q: "Who proposed the Riemann Hypothesis?", a: "Bernhard Riemann", o: ["Euler", "Bernhard Riemann", "Gauss", "Cantor"] },
+      { q: "ζ(s) has trivial zeros at which values?", a: "Negative even integers", o: ["Odd integers", "Negative even integers", "Imaginary primes", "All reals < 0"] },
+      { q: "Which function is deeply tied to the RH?", a: "Riemann Zeta Function", o: ["Gamma Function", "Tangent", "Riemann Zeta Function", "Harmonic Series"] },
+      { q: "What is the critical line?", a: "Re(s) = 1/2", o: ["Re(s) = 1", "Re(s) = 2", "Re(s) = 1/2", "Re(s) = 0"] },
+      { q: "The non-trivial zeros are conjectured to lie on?", a: "Re(s) = 1/2", o: ["Imaginary axis", "x = y", "Re(s) = 1/2", "Im(s) = 0"] },
+      { q: "Riemann hypothesis is related to which number theory concept?", a: "Distribution of primes", o: ["Fermat's Last", "Euler constant", "Distribution of primes", "Twin primes"] },
+      { q: "ζ(2) equals?", a: "π²/6", o: ["1", "π²", "π²/6", "∞"] },
+      { q: "ζ(s) diverges at which value?", a: "s = 1", o: ["s = 0", "s = 2", "s = 1", "s = -1"] },
+      { q: "ζ(-1) equals?", a: "-1/12", o: ["0", "1", "-1", "-1/12"] },
+      { q: "The hypothesis implies tighter bounds for?", a: "Prime counting error", o: ["Rational roots", "Fibonacci", "Binomial noise", "Prime counting error"] },
+      { q: "Hardy proved what about RH?", a: "Infinitely many zeros on critical line", o: ["It is false", "Infinitely many zeros on critical line", "No zeros on line", "All trivial"] },
+      { q: "RH is a part of which prize problem?", a: "Millennium Prize", o: ["Nobel", "Fields", "Clay", "Millennium Prize"] },
+      { q: "The real part of non-trivial zeros is conjectured to be?", a: "1/2", o: ["0", "1", "1/2", "2"] },
+      { q: "Riemann’s paper was published in year?", a: "1859", o: ["1900", "1859", "1701", "1888"] },
+      { q: "Which field uses RH heavily?", a: "Analytic Number Theory", o: ["Topology", "Geometry", "Analytic Number Theory", "Cryptography"] },
+      { q: "ζ(s) = ∑ 1/n^s is valid for?", a: "Re(s) > 1", o: ["s < 0", "Re(s) > 1", "s > 0", "All s"] },
+      { q: "RH assumes no zeros off the line in?", a: "Critical strip", o: ["Real axis", "Critical strip", "Imaginary domain", "Upper half"] },
+      { q: "RH has connections to which kind of matrix?", a: "Random Hermitian matrices", o: ["Identity matrix", "Magic square", "Random Hermitian matrices", "Toeplitz"] },
+      { q: "Von Koch showed RH implies error term in?", a: "Prime Number Theorem", o: ["Goldbach", "Binomial", "Prime Number Theorem", "Zeta Reflection"] },
+      { q: "How many non-trivial zeros have been verified (approx)?", a: "Billions", o: ["10", "1000", "Millions", "Billions"] }
+    ];
+
+    const unlockBtn = document.getElementById("unlockBtn");
+    const quizBox = document.getElementById("quizBox");
+    const question = document.getElementById("question");
+    const options = document.getElementById("options");
+
+    unlockBtn.onclick = () => {
+      unlockBtn.style.display = "none";
+      showQuestion();
+    };
+
+    function showQuestion() {
+      const q = questions[Math.floor(Math.random() * questions.length)];
+      question.textContent = q.q;
+      options.innerHTML = "";
+      shuffle(q.o).forEach(option => {
+        const div = document.createElement("div");
+        div.className = "option";
+        div.textContent = option;
+        div.onclick = () => {
+          if (option === q.a) {
+            alert("✅ Correct!");
+            window.location.href = "leaderboard.html";
+          } else {
+            alert("❌ Incorrect! Try another...");
+            showQuestion();
+          }
+        };
+        options.appendChild(div);
+      });
+      quizBox.style.display = "block";
+    }
+
+    function shuffle(arr) {
+      return arr.map(v => [v, Math.random()]).sort((a,b) => a[1]-b[1]).map(v => v[0]);
+    }
+
+    // Keep Matter.js animation running
+    const { Engine, World, Bodies, Runner } = Matter;
+    const engine = Engine.create();
+    engine.world.gravity.y = 0.3;
+
+    const canvas = document.getElementById('world');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const btn = document.getElementById('unlockBtn');
+    const rect = btn.getBoundingClientRect();
+    const buttonBody = Bodies.rectangle(
+      rect.left + rect.width / 2,
+      rect.top + rect.height / 2,
+      rect.width,
+      rect.height,
+      { isStatic: true, restitution: 0.5 }
+    );
+    World.add(engine.world, buttonBody);
+
+    const ground = Bodies.rectangle(window.innerWidth / 2, window.innerHeight + 100, window.innerWidth, 10, { isStatic: true });
+    World.add(engine.world, ground);
+
+    const symbols = ['+', '-', '×', '÷', 'π', '%', '√', '∑', '∫', '∞', '=', '≠', '<', '>', '∂', '∆', '∇'];
+    const bodies = [];
+
+    const mouseBody = Bodies.circle(-100, -100, 40, {
+      isStatic: true,
+      collisionFilter: { group: -1 }
+    });
+    World.add(engine.world, mouseBody);
+
+    document.addEventListener('mousemove', (e) => {
+      Matter.Body.setPosition(mouseBody, { x: e.clientX, y: e.clientY });
+    });
+
+    setInterval(() => {
+      const x = Math.random() * window.innerWidth;
+      const char = symbols[Math.floor(Math.random() * symbols.length)];
+      const size = 26 + Math.random() * 14;
+      const body = Bodies.rectangle(x, -50, size, size, {
+        restitution: 0.5,
+        friction: 0.001,
+        label: char
+      });
+      bodies.push(body);
+      World.add(engine.world, body);
+      for (let i = bodies.length - 1; i >= 0; i--) {
+        if (bodies[i].position.y > window.innerHeight + 100) {
+          World.remove(engine.world, bodies[i]);
+          bodies.splice(i, 1);
+        }
+      }
+    }, 100);
+
+    (function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#00ffd5';
+      bodies.forEach(b => {
+        ctx.save();
+        ctx.translate(b.position.x, b.position.y);
+        ctx.rotate(b.angle);
+        ctx.font = 'bold 26px Courier New';
+        ctx.fillText(b.label, -10, 10);
+        ctx.restore();
+      });
+      requestAnimationFrame(render);
+    })();
+
+    Runner.run(Runner.create(), engine);
+  </script>
+</body>
+</html>

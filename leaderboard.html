@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Riemann Gate Solvers Leaderboard</title>
+  <style>
+    body {
+      background: #111;
+      color: #0ff;
+      font-family: monospace, Courier New, monospace;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      text-shadow: 0 0 15px #0ff;
+    }
+    ul {
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 0;
+      list-style: none;
+    }
+    li {
+      background: #222;
+      margin: 6px 0;
+      padding: 10px 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px #0ff;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌟 Riemann Gate Solvers 🌟</h1>
+  <ul id="solverList"><li>Loading...</li></ul>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+    // YOUR PERSONAL FIREBASE CONFIGURATION
+    const firebaseConfig = {
+      apiKey: "AIzaSyACd811OgTStf3Ks4scWZz6SwSslvV5nc8",
+      authDomain: "riemanncounter.firebaseapp.com",
+      projectId: "riemanncounter",
+      storageBucket: "riemanncounter.firebasestorage.app",
+      messagingSenderId: "724280141787",
+      appId: "1:724280141787:web:230c432b8d51620806a9fe"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const listEl = document.getElementById('solverList');
+
+    onValue(ref(db, 'solvers'), (snapshot) => {
+      const val = snapshot.val();
+      listEl.innerHTML = '';
+      if (!val) {
+        listEl.innerHTML = '<li>No solvers yet. Be the first!</li>';
+        return;
+      }
+      // Sort entries by timestamp, newest first
+      const entries = Object.values(val).sort((a,b) => b.timestamp - a.timestamp);
+      for (const solver of entries) {
+        const li = document.createElement('li');
+        li.textContent = solver.name;
+        listEl.appendChild(li);
+      }
+    });
+  </script>
+</body>
+</html>
