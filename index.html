@@ -54,7 +54,6 @@
         animation: float 30s linear infinite;
         pointer-events: none;
         user-select: none;
-        z-index: 0;
       }
       @keyframes float {
         from {
@@ -105,22 +104,40 @@
         max-width: 500px;
         color: #00ffc8;
         display: none;
-        z-index: 3;
+        z-index: 100;
+        text-align: center;
       }
       #quizBox h2 {
         font-size: 1.2rem;
+        line-height: 1.5;
       }
-      .option {
+      #answerInput {
         margin-top: 10px;
-        background: #111;
-        border: 1px solid #00ffd5;
         padding: 10px;
+        border: 1px solid #00ffd5;
+        border-radius: 8px;
+        background: #111;
+        color: #00ffc8;
+        font-family: "Courier New", monospace;
+        font-size: 1rem;
+        text-align: center;
+        text-transform: uppercase;
+      }
+      #submitAnswerBtn {
+        margin-top: 10px;
+        background: linear-gradient(90deg, #00ffc8, #00d4ff);
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        color: black;
         border-radius: 8px;
         cursor: pointer;
+        box-shadow: 0 0 10px #00ffd5;
+        transition: all 0.3s ease;
       }
-      .option:hover {
-        background: #00d4ff;
-        color: black;
+      #submitAnswerBtn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px #00ffd5;
       }
       canvas {
         position: absolute;
@@ -133,11 +150,188 @@
   <body>
     <div id="grid-layer"></div>
 
-    <div class="math-symbol" style="left: 10%; top: 80%">π</div>
-    <div class="math-symbol" style="left: 25%; top: 90%">∫</div>
-    <div class="math-symbol" style="left: 60%; top: 95%">∞</div>
-    <div class="math-symbol" style="left: 80%; top: 85%">√</div>
-    <div class="math-symbol" style="left: 40%; top: 88%">Σ</div>
+    <div
+      id="symbol-pi"
+      class="math-symbol"
+      style="left: 10%; top: 80%; z-index: 0"
+    >
+      π
+    </div>
+    <div
+      id="symbol-int"
+      class="math-symbol"
+      style="left: 25%; top: 90%; z-index: 0"
+    >
+      ∫
+    </div>
+    <div
+      id="symbol-inf"
+      class="math-symbol"
+      style="left: 60%; top: 95%; z-index: 0"
+    >
+      ∞
+    </div>
+    <div
+      id="symbol-sqrt"
+      class="math-symbol"
+      style="left: 80%; top: 85%; z-index: 0"
+    >
+      √
+    </div>
+    <div
+      id="symbol-sigma"
+      class="math-symbol"
+      style="left: 40%; top: 88%; z-index: 0"
+    >
+      Σ
+    </div>
+    <div
+      id="symbol-zeta"
+      class="math-symbol"
+      style="left: 50%; top: 15%; z-index: 0"
+    >
+      ζ
+    </div>
+    <div
+      id="symbol-alpha"
+      class="math-symbol"
+      style="left: 5%; top: 20%; z-index: 0"
+    >
+      α
+    </div>
+    <div
+      id="symbol-beta"
+      class="math-symbol"
+      style="left: 15%; top: 40%; z-index: 0"
+    >
+      β
+    </div>
+    <div
+      id="symbol-gamma"
+      class="math-symbol"
+      style="left: 25%; top: 10%; z-index: 0"
+    >
+      γ
+    </div>
+    <div
+      id="symbol-delta"
+      class="math-symbol"
+      style="left: 35%; top: 60%; z-index: 0"
+    >
+      δ
+    </div>
+    <div
+      id="symbol-epsilon"
+      class="math-symbol"
+      style="left: 45%; top: 30%; z-index: 0"
+    >
+      ε
+    </div>
+    <div
+      id="symbol-theta"
+      class="math-symbol"
+      style="left: 55%; top: 70%; z-index: 0"
+    >
+      θ
+    </div>
+    <div
+      id="symbol-lambda"
+      class="math-symbol"
+      style="left: 65%; top: 25%; z-index: 0"
+    >
+      λ
+    </div>
+    <div
+      id="symbol-mu"
+      class="math-symbol"
+      style="left: 75%; top: 50%; z-index: 0"
+    >
+      μ
+    </div>
+    <div
+      id="symbol-omega"
+      class="math-symbol"
+      style="left: 85%; top: 10%; z-index: 0"
+    >
+      ω
+    </div>
+    <div
+      id="symbol-forall"
+      class="math-symbol"
+      style="left: 95%; top: 35%; z-index: 0"
+    >
+      ∀
+    </div>
+    <div
+      id="symbol-exists"
+      class="math-symbol"
+      style="left: 5%; top: 65%; z-index: 0"
+    >
+      ∃
+    </div>
+    <div
+      id="symbol-nabla"
+      class="math-symbol"
+      style="left: 18%; top: 72%; z-index: 0"
+    >
+      ∇
+    </div>
+    <div
+      id="symbol-partial"
+      class="math-symbol"
+      style="left: 30%; top: 45%; z-index: 0"
+    >
+      ∂
+    </div>
+    <div
+      id="symbol-element"
+      class="math-symbol"
+      style="left: 48%; top: 80%; z-index: 0"
+    >
+      ∈
+    </div>
+    <div
+      id="symbol-approx"
+      class="math-symbol"
+      style="left: 58%; top: 40%; z-index: 0"
+    >
+      ≈
+    </div>
+    <div
+      id="symbol-neq"
+      class="math-symbol"
+      style="left: 70%; top: 78%; z-index: 0"
+    >
+      ≠
+    </div>
+    <div
+      id="symbol-leq"
+      class="math-symbol"
+      style="left: 82%; top: 60%; z-index: 0"
+    >
+      ≤
+    </div>
+    <div
+      id="symbol-geq"
+      class="math-symbol"
+      style="left: 90%; top: 80%; z-index: 0"
+    >
+      ≥
+    </div>
+    <div
+      id="symbol-oplus"
+      class="math-symbol"
+      style="left: 2%; top: 90%; z-index: 0"
+    >
+      ⊕
+    </div>
+    <div
+      id="symbol-therefore"
+      class="math-symbol"
+      style="left: 95%; top: 65%; z-index: 0"
+    >
+      ∴
+    </div>
 
     <div class="center">
       <h1>Unlock the Riemann Gate</h1>
@@ -146,7 +340,9 @@
 
     <div id="quizBox">
       <h2 id="question"></h2>
-      <div id="options"></div>
+      <input type="text" id="answerInput" placeholder="DECRYPT DATA STREAM" />
+      <br />
+      <button id="submitAnswerBtn">Transmit Code</button>
     </div>
 
     <canvas id="world"></canvas>
@@ -155,7 +351,6 @@
 
     <script type="module">
       // --- FIREBASE SETUP ---
-      // Import the functions you need from the SDKs
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
       import {
         getDatabase,
@@ -165,7 +360,6 @@
         serverTimestamp,
       } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
 
-      // YOUR PERSONAL FIREBASE CONFIGURATION
       const firebaseConfig = {
         apiKey: "AIzaSyACd811OgTStf3Ks4scWZz6SwSslvV5nc8",
         authDomain: "riemanncounter.firebaseapp.com",
@@ -177,149 +371,18 @@
         appId: "1:724280141787:web:230c432b8d51620806a9fe",
       };
 
-      // Initialize Firebase
       const app = initializeApp(firebaseConfig);
       const db = getDatabase(app);
 
-      // --- QUIZ LOGIC ---
-      const questions = [
-        {
-          q: "Who proposed the Riemann Hypothesis?",
-          a: "Bernhard Riemann",
-          o: ["Euler", "Bernhard Riemann", "Gauss", "Cantor"],
-        },
-        {
-          q: "ζ(s) has trivial zeros at which values?",
-          a: "Negative even integers",
-          o: [
-            "Odd integers",
-            "Negative even integers",
-            "Imaginary primes",
-            "All reals < 0",
-          ],
-        },
-        {
-          q: "Which function is deeply tied to the RH?",
-          a: "Riemann Zeta Function",
-          o: [
-            "Gamma Function",
-            "Tangent",
-            "Riemann Zeta Function",
-            "Harmonic Series",
-          ],
-        },
-        {
-          q: "What is the critical line?",
-          a: "Re(s) = 1/2",
-          o: ["Re(s) = 1", "Re(s) = 2", "Re(s) = 1/2", "Re(s) = 0"],
-        },
-        {
-          q: "The non-trivial zeros are conjectured to lie on?",
-          a: "Re(s) = 1/2",
-          o: ["Imaginary axis", "x = y", "Re(s) = 1/2", "Im(s) = 0"],
-        },
-        {
-          q: "Riemann hypothesis is related to which number theory concept?",
-          a: "Distribution of primes",
-          o: [
-            "Fermat's Last",
-            "Euler constant",
-            "Distribution of primes",
-            "Twin primes",
-          ],
-        },
-        { q: "ζ(2) equals?", a: "π²/6", o: ["1", "π²", "π²/6", "∞"] },
-        // ... more questions can be added here
-      ];
-
+      // --- PUZZLE LOGIC ---
+      let puzzle = {};
       const unlockBtn = document.getElementById("unlockBtn");
       const quizBox = document.getElementById("quizBox");
       const question = document.getElementById("question");
-      const options = document.getElementById("options");
+      const answerInput = document.getElementById("answerInput");
+      const submitAnswerBtn = document.getElementById("submitAnswerBtn");
 
-      unlockBtn.onclick = () => {
-        unlockBtn.style.display = "none";
-        showQuestion();
-      };
-
-      function showQuestion() {
-        const q = questions[Math.floor(Math.random() * questions.length)];
-        question.textContent = q.q;
-        options.innerHTML = "";
-        shuffle(q.o).forEach((option) => {
-          const div = document.createElement("div");
-          div.className = "option";
-          div.textContent = option;
-          div.onclick = () => {
-            if (option === q.a) {
-              alert("✅ Correct!");
-              let playerName = prompt(
-                "Enter your name for the leaderboard:",
-                "Anonymous"
-              );
-              if (!playerName || playerName.trim() === "") {
-                playerName = "Anonymous";
-              }
-
-              // ** WRITE TO FIREBASE **
-              const solversRef = ref(db, "solvers");
-              const newSolverRef = push(solversRef);
-              set(newSolverRef, {
-                name: playerName,
-                timestamp: serverTimestamp(),
-              })
-                .then(() => {
-                  // Redirect AFTER data is saved
-                  window.location.href = "leaderboard.html";
-                })
-                .catch((error) => {
-                  console.error("Error writing to database", error);
-                  alert("Could not save score. See console for details.");
-                });
-            } else {
-              alert("❌ Incorrect! Try another...");
-              showQuestion();
-            }
-          };
-          options.appendChild(div);
-        });
-        quizBox.style.display = "block";
-      }
-
-      function shuffle(arr) {
-        return arr
-          .map((v) => [v, Math.random()])
-          .sort((a, b) => a[1] - b[1])
-          .map((v) => v[0]);
-      }
-
-      // --- Matter.js Animation (No changes needed here) ---
-      const { Engine, World, Bodies, Runner } = Matter;
-      const engine = Engine.create();
-      engine.world.gravity.y = 0.3;
-      const canvas = document.getElementById("world");
-      const ctx = canvas.getContext("2d");
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      const btn = document.getElementById("unlockBtn");
-      const rect = btn.getBoundingClientRect();
-      const buttonBody = Bodies.rectangle(
-        rect.left + rect.width / 2,
-        rect.top + rect.height / 2,
-        rect.width,
-        rect.height,
-        { isStatic: true, restitution: 0.5 }
-      );
-      World.add(engine.world, buttonBody);
-      const ground = Bodies.rectangle(
-        window.innerWidth / 2,
-        window.innerHeight + 100,
-        window.innerWidth,
-        10,
-        { isStatic: true }
-      );
-      World.add(engine.world, ground);
-      const symbols = [
+      const allFallingSymbols = [
         "+",
         "-",
         "×",
@@ -337,48 +400,201 @@
         "∂",
         "∆",
         "∇",
+        "ζ",
       ];
-      const bodies = [];
-      const mouseBody = Bodies.circle(-100, -100, 40, {
-        isStatic: true,
-        collisionFilter: { group: -1 },
-      });
-      World.add(engine.world, mouseBody);
-      document.addEventListener("mousemove", (e) => {
-        Matter.Body.setPosition(mouseBody, { x: e.clientX, y: e.clientY });
-      });
-      setInterval(() => {
-        const x = Math.random() * window.innerWidth;
-        const char = symbols[Math.floor(Math.random() * symbols.length)];
-        const size = 26 + Math.random() * 14;
-        const body = Bodies.rectangle(x, -50, size, size, {
-          restitution: 0.5,
-          friction: 0.001,
-          label: char,
-        });
-        bodies.push(body);
-        World.add(engine.world, body);
-        for (let i = bodies.length - 1; i >= 0; i--) {
-          if (bodies[i].position.y > window.innerHeight + 100) {
-            World.remove(engine.world, bodies[i]);
-            bodies.splice(i, 1);
+      let currentFallingSymbols = [...allFallingSymbols];
+
+      // --- The Constant, Fixed Symbol Mapping ---
+      // This is the ground truth for the cipher. It never changes.
+      const SYMBOL_MAPPING = [
+        { id: "symbol-pi", char: "π" }, // A
+        { id: "symbol-int", char: "∫" }, // B
+        { id: "symbol-inf", char: "∞" }, // C
+        { id: "symbol-sqrt", char: "√" }, // D
+        { id: "symbol-sigma", char: "Σ" }, // E
+        { id: "symbol-zeta", char: "ζ" }, // F
+        { id: "symbol-alpha", char: "α" }, // G
+        { id: "symbol-beta", char: "β" }, // H
+        { id: "symbol-gamma", char: "γ" }, // I
+        { id: "symbol-delta", char: "δ" }, // J
+        { id: "symbol-epsilon", char: "ε" }, // K
+        { id: "symbol-theta", char: "θ" }, // L
+        { id: "symbol-lambda", char: "λ" }, // M
+        { id: "symbol-mu", char: "μ" }, // N
+        { id: "symbol-omega", char: "ω" }, // O
+        { id: "symbol-forall", char: "∀" }, // P
+        { id: "symbol-exists", char: "∃" }, // Q
+        { id: "symbol-nabla", char: "∇" }, // R
+        { id: "symbol-partial", char: "∂" }, // S
+        { id: "symbol-element", char: "∈" }, // T
+        { id: "symbol-approx", char: "≈" }, // U
+        { id: "symbol-neq", char: "≠" }, // V
+        { id: "symbol-leq", char: "≤" }, // W
+        { id: "symbol-geq", char: "≥" }, // X
+        { id: "symbol-oplus", char: "⊕" }, // Y
+        { id: "symbol-therefore", char: "∴" }, // Z
+      ];
+
+      unlockBtn.onclick = () => {
+        const userName = prompt(
+          "Please enter your name to begin the trial (min. 3 letters):"
+        );
+        if (userName) {
+          const sanitizedName = userName
+            .trim()
+            .toUpperCase()
+            .replace(/[^A-Z]/g, "");
+          if (sanitizedName.length >= 3) {
+            unlockBtn.style.display = "none";
+            generateAndShowPuzzle(sanitizedName);
+          } else {
+            alert("Invalid name. Please use at least 3 alphabetic characters.");
           }
         }
-      }, 100);
-      (function render() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#00ffd5";
-        bodies.forEach((b) => {
-          ctx.save();
-          ctx.translate(b.position.x, b.position.y);
-          ctx.rotate(b.angle);
-          ctx.font = "bold 26px Courier New";
-          ctx.fillText(b.label, -10, 10);
-          ctx.restore();
+      };
+
+      function generateAndShowPuzzle(name) {
+        const key = {}; // e.g. { 'A': 'π', 'L': 'θ' }
+        const zIndexMap = {}; // e.g. { 'symbol-pi': 1, 'symbol-theta': 12 }
+
+        // Use the fixed mapping, not a random one
+        [...new Set(name)].forEach((letter) => {
+          const letterIndex = letter.charCodeAt(0) - "A".charCodeAt(0); // A=0, B=1...
+          const letterPosition = letterIndex + 1; // A=1, B=2...
+
+          const assignedSymbol = SYMBOL_MAPPING[letterIndex];
+
+          key[letter] = assignedSymbol.char;
+          zIndexMap[assignedSymbol.id] = letterPosition;
         });
-        requestAnimationFrame(render);
-      })();
-      Runner.run(Runner.create(), engine);
+
+        for (const symbolId in zIndexMap) {
+          document.getElementById(symbolId).style.zIndex = zIndexMap[symbolId];
+        }
+
+        const symbolsForAnimation = name.split("").map((letter) => key[letter]);
+        currentFallingSymbols = symbolsForAnimation;
+
+        puzzle = {
+          q: "The subject is the solution. The <strong>data stream</strong> holds your sequence. The key is hidden in the subject's alphabetical signature.",
+          a: name,
+        };
+
+        showPuzzleUI();
+      }
+
+      function handleAnswerSubmission() {
+        const userAnswer = answerInput.value.trim().toUpperCase();
+        if (userAnswer === puzzle.a) {
+          alert("✅ ACCESS GRANTED. The Gate is Unlocked.");
+          const solversRef = ref(db, "solvers");
+          const newSolverRef = push(solversRef);
+          set(newSolverRef, {
+            name: puzzle.a,
+            timestamp: serverTimestamp(),
+          })
+            .then(() => {
+              window.location.href = "leaderboard.html";
+            })
+            .catch((error) => {
+              console.error("Error writing to database", error);
+              alert("Could not save score. See console for details.");
+            });
+        } else {
+          alert("❌ ACCESS DENIED. Data stream interpretation incorrect.");
+          answerInput.value = "";
+        }
+      }
+
+      function showPuzzleUI() {
+        question.innerHTML = puzzle.q;
+        submitAnswerBtn.onclick = handleAnswerSubmission;
+        answerInput.addEventListener("keyup", (event) => {
+          if (event.key === "Enter") handleAnswerSubmission();
+        });
+        quizBox.style.display = "block";
+        answerInput.focus();
+      }
+
+      // --- Matter.js Animation ---
+      function setupAnimation() {
+        const { Engine, World, Bodies, Runner, Events } = Matter;
+        const engine = Engine.create();
+        engine.world.gravity.y = 0.15;
+        const canvas = document.getElementById("world");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const bodies = [];
+
+        const ground = Bodies.rectangle(
+          window.innerWidth / 2,
+          window.innerHeight + 10,
+          window.innerWidth,
+          60,
+          { isStatic: true, label: "ground" }
+        );
+        World.add(engine.world, ground);
+
+        Events.on(engine, "collisionStart", function (event) {
+          const pairs = event.pairs;
+          for (let i = 0; i < pairs.length; i++) {
+            const pair = pairs[i];
+            if (pair.bodyA.label === "ground") {
+              if (!pair.bodyB.timeFallen) pair.bodyB.timeFallen = Date.now();
+            } else if (pair.bodyB.label === "ground") {
+              if (!pair.bodyA.timeFallen) pair.bodyA.timeFallen = Date.now();
+            }
+          }
+        });
+
+        const animationInterval = setInterval(() => {
+          if (currentFallingSymbols.length === 0) return;
+
+          const x = Math.random() * window.innerWidth;
+          const char =
+            currentFallingSymbols[
+              Math.floor(Math.random() * currentFallingSymbols.length)
+            ];
+          const size = 26 + Math.random() * 14;
+          const body = Bodies.rectangle(x, -50, size, size, {
+            restitution: 0.5,
+            friction: 0.1,
+            label: "symbol",
+          });
+          body.customChar = char;
+          bodies.push(body);
+          World.add(engine.world, body);
+
+          for (let i = bodies.length - 1; i >= 0; i--) {
+            const body = bodies[i];
+            if (body.timeFallen && Date.now() - body.timeFallen > 3000) {
+              World.remove(engine.world, body);
+              bodies.splice(i, 1);
+            }
+          }
+        }, 150);
+
+        (function render() {
+          const bodiesToRender = [...bodies];
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          bodiesToRender.forEach((b) => {
+            ctx.save();
+            ctx.translate(b.position.x, b.position.y);
+            ctx.rotate(b.angle);
+            ctx.fillStyle = "#00ffd5";
+            ctx.font = "bold 26px Courier New";
+            ctx.fillText(b.customChar, -10, 10);
+            ctx.restore();
+          });
+          requestAnimationFrame(render);
+        })();
+        Runner.run(Runner.create(), engine);
+      }
+
+      setupAnimation();
     </script>
   </body>
 </html>
